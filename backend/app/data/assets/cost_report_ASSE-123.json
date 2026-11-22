@@ -1,0 +1,11 @@
+{
+  "asset_id": "ASSE-123",
+  "record_id": "COST-ASSE-123",
+  "storage_cost": "5.00",
+  "compute_cost": "10.00",
+  "transfer_cost": "0.00",
+  "period": "",
+  "trend": "持平",
+  "anomaly": "无",
+  "calculated_at": "2026-11-22T15:51:35.613203+00:00"
+}

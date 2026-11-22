@@ -1,0 +1,10 @@
+{
+  "cold_location": "s3://cold/ASSE-1234",
+  "task_id": "HOT_-9001",
+  "target_partition": "ASSE-1234_hot",
+  "volume": "100GB",
+  "priority": "高",
+  "expiry_policy": "T+7",
+  "status": "回迁中",
+  "updated_at": "2026-11-22T15:51:35.612773+00:00"
+}

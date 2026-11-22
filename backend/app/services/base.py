@@ -6,6 +6,36 @@ from typing import Any
 from app.store import store
 
 
+def split_location_segments(location: str) -> list[str]:
+    """把冷存位置拆成路径段，供资产编号精确匹配使用。
+
+    例: "s3://cold/ASSE-1234" -> ["cold", "ASSE-1234"]
+    """
+    text = str(location or "").strip()
+    if not text:
+        return []
+    text = text.split("://", 1)[-1]
+    text = text.split("?", 1)[0].split("#", 1)[0]
+    return [segment for segment in text.split("/") if segment]
+
+
+def location_matches_asset(location: str, asset_id: str) -> bool:
+    """冷存位置只有在完整路径段等于资产编号时才命中，禁止部分编号匹配。
+
+    "s3://cold/ASSE-1234" 命中 ASSE-1234，但不会误中 ASSE-123。
+    """
+    asset = str(asset_id or "").strip()
+    if not asset:
+        return False
+    return asset in split_location_segments(location)
+
+
+def asset_id_from_location(location: str) -> str:
+    """取冷存位置的最后一段作为归属资产编号。"""
+    segments = split_location_segments(location)
+    return segments[-1] if segments else ""
+
+
 class BaseModuleService:
     MODULE = ""
     ENTITY = ""

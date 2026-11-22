@@ -12,7 +12,7 @@ import os
 from datetime import datetime, timezone
 from typing import Any
 
-from app.services.base import BaseModuleService
+from app.services.base import BaseModuleService, location_matches_asset
 from app.store import store
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "assets")
@@ -128,10 +128,11 @@ class ColdStorageService(BaseModuleService):
                 break
 
     def _check_prefetch_need(self, asset_id: str) -> None:
-        """检查冷存资产是否有预热回迁需求。"""
+        """检查冷存资产是否有预热回迁需求（冷存位置按完整路径段精确匹配）。"""
         hot_rows = store.rows("hot_prefetch")
         for row in hot_rows:
-            if str(row.get("冷存位置", "")).find(asset_id) >= 0 and row.get("status") == "排队中":
+            if location_matches_asset(str(row.get("冷存位置", "")), asset_id) \
+                    and row.get("status") == "排队中":
                 return
         # 无已有预热任务则创建种子
         next_id = max((int(r.get("id", 0)) for r in hot_rows), default=0) + 1
